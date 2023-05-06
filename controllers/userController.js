@@ -70,12 +70,30 @@ module.exports = {
   },
 
   // Add a friend
-
   async addFriend(req, res){
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.params.userId },
         { $push: {friends:[req.params.friendId]} },
+        { runValidators: true, new: true }
+      );
+
+      if (!updatedUser) {
+        res.status(404).json({ message: 'No user with this id!' });
+      }
+
+      res.json(updatedUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Delete a friend
+  async deleteFriend(req, res){
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pullAll: {friends:[req.params.friendId]} },
         { runValidators: true, new: true }
       );
 
