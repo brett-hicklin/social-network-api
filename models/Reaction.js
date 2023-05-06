@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const reactionSchema = require("./Reaction");
 const options = {year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'numeric',hour12:'true'}
 
 //schema to create User model
@@ -35,7 +34,8 @@ const reactionSchema = new Schema(
 );
 
 
-const Reaction = model('reaction', reactionSchema);
+// const Reaction = model('reaction', reactionSchema);
+const Reaction = reactionSchema;
 
 
 module.exports = Reaction;
