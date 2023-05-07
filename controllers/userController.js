@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require("../models");
 
 module.exports = {
   // Get all users
@@ -10,14 +10,15 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Get a user
+  // Get a single user
   async getSingleUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userId })
-        .select('-__v');
+      const user = await User.findOne({ _id: req.params.userId }).select(
+        "-__v"
+      );
 
       if (!user) {
-        return res.status(404).json({ message: 'No user with that ID' });
+        return res.status(404).json({ message: "No user with that ID" });
       }
 
       res.json(user);
@@ -41,11 +42,10 @@ module.exports = {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
 
       if (!user) {
-        res.status(404).json({ message: 'No user with that ID' });
+        res.status(404).json({ message: "No user with that ID" });
       }
 
-    //   await Student.deleteMany({ _id: { $in: user.students } });
-      res.json({ message: 'User deleted!' });
+      res.json({ message: "User deleted!" });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -60,7 +60,7 @@ module.exports = {
       );
 
       if (!user) {
-        res.status(404).json({ message: 'No user with this id!' });
+        res.status(404).json({ message: "No user with this id!" });
       }
 
       res.json(user);
@@ -70,16 +70,16 @@ module.exports = {
   },
 
   // Add a friend
-  async addFriend(req, res){
+  async addFriend(req, res) {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $push: {friends:[req.params.friendId]} },
+        { $push: { friends: [req.params.friendId] } },
         { runValidators: true, new: true }
       );
 
       if (!updatedUser) {
-        res.status(404).json({ message: 'No user with this id!' });
+        res.status(404).json({ message: "No user with this id!" });
       }
 
       res.json(updatedUser);
@@ -89,16 +89,16 @@ module.exports = {
   },
 
   // Delete a friend
-  async deleteFriend(req, res){
+  async deleteFriend(req, res) {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pullAll: {friends:[req.params.friendId]} },
+        { $pullAll: { friends: [req.params.friendId] } },
         { runValidators: true, new: true }
       );
 
       if (!updatedUser) {
-        res.status(404).json({ message: 'No user with this id!' });
+        res.status(404).json({ message: "No user with this id!" });
       }
 
       res.json(updatedUser);

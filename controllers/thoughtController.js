@@ -1,4 +1,4 @@
-const { Thought } = require('../models');
+const { Thought } = require("../models");
 
 module.exports = {
   // Get all thoughts
@@ -10,14 +10,15 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Get a thought
+  // Get a single thought
   async getSingleThought(req, res) {
     try {
-      const thought = await Thought.findOne({ _id: req.params.thoughtId })
-        .select('-__v');
+      const thought = await Thought.findOne({
+        _id: req.params.thoughtId,
+      }).select("-__v");
 
       if (!thought) {
-        return res.status(404).json({ message: 'No thought with that ID' });
+        return res.status(404).json({ message: "No thought with that ID" });
       }
 
       res.json(thought);
@@ -38,14 +39,15 @@ module.exports = {
   // Delete a thought
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
+      const thought = await Thought.findOneAndDelete({
+        _id: req.params.thoughtId,
+      });
 
       if (!thought) {
-        res.status(404).json({ message: 'No thought with that ID' });
+        res.status(404).json({ message: "No thought with that ID" });
       }
 
-    //   await Student.deleteMany({ _id: { $in: thought.students } });
-      res.json({ message: 'Thought deleted!' });
+      res.json({ message: "Thought deleted!" });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -60,7 +62,7 @@ module.exports = {
       );
 
       if (!thought) {
-        res.status(404).json({ message: 'No thought with this id!' });
+        res.status(404).json({ message: "No thought with this id!" });
       }
 
       res.json(thought);
@@ -69,42 +71,41 @@ module.exports = {
     }
   },
 
-// Add a reaction
-async addReaction(req, res){
-  try {
-    const response = await Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
-      { $addToSet: { reactions: req.body } },
-      { runValidators: true, new: true }
-    );
+  // Add a reaction
+  async addReaction(req, res) {
+    try {
+      const response = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $addToSet: { reactions: req.body } },
+        { runValidators: true, new: true }
+      );
 
-    if (!response) {
-      res.status(404).json({ message: 'No thought with this id!' });
+      if (!response) {
+        res.status(404).json({ message: "No thought with this id!" });
+      }
+
+      res.json(response);
+    } catch (err) {
+      res.status(500).json(err);
     }
+  },
 
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-},
+  // Delete a reaction
+  async deleteReaction(req, res) {
+    try {
+      const response = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.body.reactionId } } },
+        { runValidators: true, new: true }
+      );
 
-// Delete a reaction
-async deleteReaction(req, res){
-  try {
-    const response = await Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
-      { $pull: { reactions: { reactionId: req.body.reactionId } } },
-      { runValidators: true, new: true }
-    );
+      if (!response) {
+        res.status(404).json({ message: "No thought with this id!" });
+      }
 
-    if (!response) {
-      res.status(404).json({ message: 'No thought with this id!' });
+      res.json(response);
+    } catch (err) {
+      res.status(500).json(err);
     }
-
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-},
-
+  },
 };
