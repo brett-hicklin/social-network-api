@@ -16,7 +16,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
       get:function(timestamp){
-        return new Date(timestamp).toLocaleString('en-us',options);
+        return new Date(timestamp).toLocaleString('en-us');
       }
     },
 
